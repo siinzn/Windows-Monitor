@@ -1,5 +1,6 @@
 #include "Process.h"
 #include "CpuTime.h"
+#include "MemoryData.h"
 #include <locale>
 #include <iostream>
 #include <thread>
@@ -22,5 +23,7 @@ int main()
 
     std::wcout.imbue(std::locale(""));
     printProcess();
+
+    printMemoryInfo();
 }
 
