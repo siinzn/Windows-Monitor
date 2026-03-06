@@ -9,6 +9,8 @@ MemoryInfo getMemoryInfo() {
 	if (!GlobalMemoryStatusEx(&myMemoryInfo64)) return mi;
 	mi.totalPhys = myMemoryInfo64.ullTotalPhys;
 	mi.availPhys = myMemoryInfo64.ullAvailPhys;
+	mi.totalVirtual = myMemoryInfo64.ullTotalVirtual;
+	mi.availVirtual = myMemoryInfo64.ullAvailVirtual;
 	return mi;
 }
 

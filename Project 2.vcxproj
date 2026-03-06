@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CpuTime.h" />
+    <ClInclude Include="Global.h" />
     <ClInclude Include="MemoryData.h" />
     <ClInclude Include="Process.h" />
   </ItemGroup>
