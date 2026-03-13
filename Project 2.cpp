@@ -2,6 +2,7 @@
 #include "CpuTime.h"
 #include "MemoryData.h"
 #include "Global.h"
+#include <iomanip>
 #include <locale>
 #include <iostream>
 #include <thread>
@@ -16,22 +17,27 @@ int main()
 {
     //std::wcout.imbue(std::locale(""));
     //printProcess();
-    
+
 
     BOOL running = TRUE;
     FILETIME_as_int previousCpu = {}; // set the first run to 0
-    std::vector<ProcessInfo> previousProcesses= {};
     std::map<ProcessKey, uint64_t> previousKey;
     const int cores = getCores();
 
     while (running)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        HANDLE currentSnapshot = getSnapshot();
-        std::vector<ProcessInfo> currentProcesses = getProcess(currentSnapshot);
+
+
         system("cls");
+        //cpu time
         FILETIME_as_int currentCpu = systemData();
         cpuDeltas cpu_rate;
+
+        //get processes
+        HANDLE currentSnapshot = getSnapshot();
+        std::vector<ProcessInfo> currentProcesses = getProcess(currentSnapshot);
+
         if (previousCpu.idle || previousCpu.kernel || previousCpu.user) { // check if previous is non zero
 
             cpu_rate = systemDataToInt(previousCpu, currentCpu);
@@ -43,25 +49,35 @@ int main()
             std::cout << "Waiting for next run\n";
         }
         previousCpu = currentCpu;
-        
-        for (const auto cp : currentProcesses) {
+
+
+        std::cout << std::left << std::setw(10) << "PID"
+            << std::left << std::setw(25) << "fileName"
+            << std::left << std::setw(30) << "%" << std::endl;
+        for (const auto& cp : currentProcesses) {
             ProcessKey key = { cp.pId, cp.creationTime };
             auto it = previousKey.find(key);
             if (it != previousKey.end()) {
                 uint64_t previousTotal = it->second;
                 uint64_t currentTotal = cp.kernelTime + cp.userTime;
                 uint64_t processDelta = currentTotal - previousTotal;
-                uint64_t cpuPerc = processDelta / (10000000LL * cores) * 100;
-                std::wcout << cp.fileName << " : " << cpuPerc << std::endl;
+                if (cpu_rate.dSystem != 0) {
+                    double cpuPerc = static_cast<double>(processDelta) / cpu_rate.dSystem * 100;
+                    std::wcout << std::left << std::setw(10) << cp.pId
+                        << std::left << std::setw(25) << cp.fileName
+                        << std::left << std::setw(30) << cpuPerc << std::endl;
+                }
+                else {
+                    std::cout << "Error" << std::endl;
+                }
             }
         }
 
-        for (const auto cp : currentProcesses) {
+        for (const auto& cp : currentProcesses) {
             ProcessKey key = { cp.pId, cp.creationTime };
             uint64_t totalCpu = cp.kernelTime + cp.userTime;
             previousKey[key] = totalCpu;
         }
-        previousProcesses = currentProcesses;
     }
 }
 

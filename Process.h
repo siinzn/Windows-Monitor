@@ -13,6 +13,7 @@ struct ProcessInfo
 
 struct ProcessKey {
 	DWORD pId;
+	//std::wstring fileName;
 	uint64_t creationTime;
 
 	bool operator<(const ProcessKey& other) const {
@@ -23,4 +24,4 @@ struct ProcessKey {
 
 HANDLE getSnapshot();
 std::vector<ProcessInfo> getProcess(HANDLE process);
-void printProcess();
+uint64_t display(std::vector<ProcessInfo>currentProcesses);
