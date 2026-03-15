@@ -10,16 +10,14 @@
 
 HANDLE getSnapshot() {
     HANDLE hProcess;
-    DWORD dwError = 0;
     hProcess = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    if (hProcess == INVALID_HANDLE_VALUE) {
-        std::cout << "Error : " << GetLastError() << std::endl;
-    }
+    if (hProcess == INVALID_HANDLE_VALUE) return INVALID_HANDLE_VALUE;
     return hProcess;
 }
 
-std::vector<ProcessInfo> getProcess(HANDLE process) {
+std::vector<ProcessInfo> enumerateProcesses(HANDLE process) {
     std::vector<ProcessInfo> processes;
+    if (process == INVALID_HANDLE_VALUE) return processes;
     PROCESSENTRY32 pe32;
 
     pe32.dwSize = sizeof(PROCESSENTRY32);
@@ -27,7 +25,6 @@ std::vector<ProcessInfo> getProcess(HANDLE process) {
 
 
     if (!Process32F) {
-        std::cout << "Error : " << GetLastError() << std::endl;
         CloseHandle(process);
         return processes;
     }
@@ -60,7 +57,7 @@ std::vector<ProcessInfo> getProcess(HANDLE process) {
 
 void printProcess() {
     HANDLE snapshot = getSnapshot();
-    std::vector<ProcessInfo> processes = getProcess(snapshot);
+    std::vector<ProcessInfo> processes = enumerateProcesses(snapshot);
     for (auto p : processes) {
         std::wcout << p.fileName << L" - " << p.pId << std::endl;
     }

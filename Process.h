@@ -23,5 +23,5 @@ struct ProcessKey {
 };
 
 HANDLE getSnapshot();
-std::vector<ProcessInfo> getProcess(HANDLE process);
-uint64_t display(std::vector<ProcessInfo>currentProcesses);
+std::vector<ProcessInfo> enumerateProcesses(HANDLE process);
+void printProcess();
