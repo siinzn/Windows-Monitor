@@ -2,6 +2,7 @@
 #include "CpuTime.h"
 #include <windows.h>
 #include <tlhelp32.h>
+#include <Psapi.h>
 #include <iostream>
 #include <vector>
 
@@ -17,6 +18,8 @@ HANDLE getSnapshot() {
 
 std::vector<ProcessInfo> enumerateProcesses(HANDLE process) {
     std::vector<ProcessInfo> processes;
+    PROCESS_MEMORY_COUNTERS pmc;
+
     if (process == INVALID_HANDLE_VALUE) return processes;
     PROCESSENTRY32 pe32;
 
@@ -47,6 +50,15 @@ std::vector<ProcessInfo> enumerateProcesses(HANDLE process) {
         pi.exitTime = FileTimeToInt64(exit_time);
         pi.kernelTime = FileTimeToInt64(kernel);
         pi.userTime = FileTimeToInt64(user);
+
+        if (GetProcessMemoryInfo(hProc, &pmc, sizeof(pmc))) {
+            size_t wssMB = pmc.WorkingSetSize / (1024 * 1024);
+            pi.workingSet = wssMB;
+        }
+        else {
+            pi.workingSet = 0;
+        }
+
         processes.push_back(pi);
         CloseHandle(hProc);
 
@@ -58,7 +70,7 @@ std::vector<ProcessInfo> enumerateProcesses(HANDLE process) {
 void printProcess() {
     HANDLE snapshot = getSnapshot();
     std::vector<ProcessInfo> processes = enumerateProcesses(snapshot);
-    for (auto p : processes) {
+    for (const auto& p : processes) {
         std::wcout << p.fileName << L" - " << p.pId << std::endl;
     }
 }

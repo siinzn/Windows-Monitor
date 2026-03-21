@@ -6,6 +6,9 @@
 #include <thread>
 #include <vector>
 #include <map>
+#include <string>
+#include <format>
+
 
 // basically remove the loop below and make it in a way that rate is handled corrently
 //there should be a previous value, and then a time limit, and then the current value which keeps changing
@@ -46,7 +49,8 @@ int main()
 
         std::cout << std::left << std::setw(10) << "PID"
             << std::left << std::setw(50) << "fileName"
-            << std::left << std::setw(25) << "CPU%" << std::endl;
+            << std::left << std::setw(25) << "CPU%"
+            << std::left << std::setw(25) << "RAM" << std::endl;
         for (const auto& cp : currentProcesses) {
             ProcessKey key = { cp.pId, cp.creationTime };
             auto it = previousKey.find(key);
@@ -55,10 +59,12 @@ int main()
                 uint64_t currentTotal = cp.kernelTime + cp.userTime;
                 uint64_t processDelta = currentTotal - previousTotal;
                 if (cpu_rate.dSystem != 0) {
-                    double cpuPerc = static_cast<double>(processDelta) / cpu_rate.dSystem * 100;
+                    double cpuPercuf = static_cast<double>(processDelta) / cpu_rate.dSystem * 100;
+                    std::wstring cpuPerc = std::format(L"{:.2f}", cpuPercuf);
                     std::wcout << std::left << std::setw(10) << cp.pId
                         << std::left << std::setw(50) << cp.fileName
-                        << std::left << std::setw(25) << cpuPerc << std::endl;
+                        << std::left << std::setw(25) << cpuPerc 
+                        << std::left << cp.workingSet << "MB" << std::endl;
                 }
             }
         }

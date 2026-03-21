@@ -9,6 +9,7 @@ struct ProcessInfo
 	DWORD pId;
 	std::wstring fileName;
 	uint64_t kernelTime, userTime, creationTime, exitTime;
+	size_t workingSet;
 };
 
 struct ProcessKey {
