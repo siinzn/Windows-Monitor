@@ -13,7 +13,6 @@ FILETIME_as_int systemData() {
     FILETIME_as_int fi;
     FILETIME idle, kernel, user;
     if (!GetSystemTimes(&idle, &kernel, &user)) return FILETIME_as_int{ 0,0,0 };
-    GetSystemTimes(&idle, &kernel, &user);
     fi.idle = FileTimeToInt64(idle);
     fi.kernel = FileTimeToInt64(kernel);
     fi.user = FileTimeToInt64(user);
@@ -30,11 +29,13 @@ cpuDeltas systemDataToInt(FILETIME_as_int previous, FILETIME_as_int current) {
     return dv;
 }
 void printSystemData(cpuDeltas dv) {
-    uint64_t cpu_percent = (dv.dSystem - dv.dIdle) * 100 / dv.dSystem;
-    std::cout << "\rIdle : " << dv.dIdle << std::endl;
-    std::cout << "\rKernel : " << dv.dKernel << std::endl;
-    std::cout << "\rUser : " << dv.dUser << std::endl;
-    std::cout << "\rSystem : " << cpu_percent << "%" << std::endl;
+    if (dv.dSystem != 0) {
+        uint64_t cpu_percent = (dv.dSystem - dv.dIdle) * 100 / dv.dSystem;
+        std::cout << "Idle : " << dv.dIdle << std::endl;
+        std::cout << "Kernel : " << dv.dKernel << std::endl;
+        std::cout << "User : " << dv.dUser << std::endl;
+        std::cout << "System : " << cpu_percent << "%" << std::endl;
+    }
 }
 
 

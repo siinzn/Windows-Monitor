@@ -16,8 +16,8 @@ MemoryInfo getMemoryInfo() {
 
 void printMemoryInfo() {
 	MemoryInfo mi = getMemoryInfo();
-	uint64_t totalPhysGB = mi.totalPhys / (1024 * 1024 * 1024);
-	uint64_t availPhysGB = mi.availPhys / (1024 * 1024 * 1024);
-	std::cout << "Total Physical Memory : " << totalPhysGB << "GB" << std::endl;
-	std::cout << "Available Physical Memory : " << availPhysGB << "GB" << std::endl;
+	uint64_t totalPhysMB = mi.totalPhys / (1024 * 1024);
+	uint64_t availPhysMB = mi.availPhys / (1024 * 1024);
+	std::cout << "Total Physical Memory : " << totalPhysMB << "MB" << std::endl;
+	std::cout << "Available Physical Memory : " << availPhysMB << "MB" << std::endl;
 }

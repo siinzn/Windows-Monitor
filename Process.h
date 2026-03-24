@@ -10,6 +10,7 @@ struct ProcessInfo
 	std::wstring fileName;
 	uint64_t kernelTime, userTime, creationTime, exitTime;
 	size_t workingSet;
+	std::wstring cpuPerc;
 };
 
 struct ProcessKey {

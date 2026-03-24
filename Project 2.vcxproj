@@ -125,13 +125,15 @@
   <ItemGroup>
     <ClCompile Include="CpuTime.cpp" />
     <ClCompile Include="MemoryData.cpp" />
+    <ClCompile Include="Monitor.cpp" />
     <ClCompile Include="Process.cpp" />
-    <ClCompile Include="Project 2.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CpuTime.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="MemoryData.h" />
+    <ClInclude Include="Monitor.h" />
     <ClInclude Include="Process.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

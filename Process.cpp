@@ -7,8 +7,6 @@
 #include <vector>
 
 
-
-
 HANDLE getSnapshot() {
     HANDLE hProcess;
     hProcess = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -67,10 +65,11 @@ std::vector<ProcessInfo> enumerateProcesses(HANDLE process) {
     return processes;
 }
 
-void printProcess() {
+/*void printProcess() {
     HANDLE snapshot = getSnapshot();
     std::vector<ProcessInfo> processes = enumerateProcesses(snapshot);
     for (const auto& p : processes) {
         std::wcout << p.fileName << L" - " << p.pId << std::endl;
     }
 }
+*/
