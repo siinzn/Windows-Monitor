@@ -11,6 +11,7 @@ class Monitor {
 public:
 	void update();
 	void render();
+	int refresh_rate{ 500 };
 private:
 	struct RenderDetails {
 		DWORD pId;
@@ -24,4 +25,5 @@ private:
 	FILETIME_as_int previousCpu = {};
 	std::map<ProcessKey, uint64_t> previousKey;
 	bool initialized = false;
+	
 };

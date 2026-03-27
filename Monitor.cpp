@@ -1,6 +1,8 @@
 #include "Monitor.h"
+#include <ranges>
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 
 void Monitor::update() {
     rd.clear(); // clear the vector
@@ -63,18 +65,37 @@ void Monitor::update() {
 }
 
 void Monitor::render() {
+    
+    system("cls");
+    std::cout << "Refresh Rate: " << refresh_rate << std::endl;
 
+    std::cout << "-----------------------------------------------------------------------------" << std::endl;
     printSystemData(cpu_rate);
+    std::cout << "-----------------------------------------------------------------------------" << std::endl;
     printMemoryInfo();
+    std::cout << "-----------------------------------------------------------------------------\n" << std::endl;
     std::wcout << std::left << std::setw(10) << "PID"
-        << std::left << std::setw(50) << "fileName"
-        << std::left << std::setw(25) << "CPU%"
-        << std::left << std::setw(25) << "RAM" << std::endl;
+        << std::left << std::setw(35) << "fileName"
+        << std::left << std::setw(15) << "CPU%"
+        << "RAM" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------\n" << std::endl;
+    std::stable_sort(rd.begin(), rd.end(), [](const RenderDetails& a, const RenderDetails& b) {
+        
+        double cpuA = std::stod(a.cpuPerc);
+        double cpuB = std::stod(b.cpuPerc);
 
-    for (const auto& rdetails : rd) {
+        if (cpuA != cpuB) return cpuA > cpuB;
+        if (a.workingSet != b.workingSet) return a.workingSet > b.workingSet;
+        if (a.fileName != b.fileName) return a.fileName < b.fileName;
+        return a.pId > b.pId;
+    });
+
+    size_t maxProcesses = 15;
+    for (const auto& rdetails : rd | std::views::take(maxProcesses)) {
         std::wcout << std::left << std::setw(10) << rdetails.pId
-            << std::left << std::setw(50) << rdetails.fileName
-            << std::left << std::setw(25) << rdetails.cpuPerc
+            << std::left << std::setw(35) << rdetails.fileName
+            << std::left << std::setw(15) << rdetails.cpuPerc
             << std::left << rdetails.workingSet << "MB" << std::endl;
     }
+    std::cout << "-----------------------------------------------------------------------------\n" << std::endl;
 }

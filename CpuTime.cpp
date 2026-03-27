@@ -1,6 +1,7 @@
 #include "CpuTime.h"
 #include <thread>
 #include <iostream>
+#include <iomanip>
 
 uint64_t FileTimeToInt64(const FILETIME ft) {
     ULARGE_INTEGER uli = { 0 };
@@ -30,11 +31,11 @@ cpuDeltas systemDataToInt(FILETIME_as_int previous, FILETIME_as_int current) {
 }
 void printSystemData(cpuDeltas dv) {
     if (dv.dSystem != 0) {
-        uint64_t cpu_percent = (dv.dSystem - dv.dIdle) * 100 / dv.dSystem;
-        std::cout << "Idle : " << dv.dIdle << std::endl;
-        std::cout << "Kernel : " << dv.dKernel << std::endl;
-        std::cout << "User : " << dv.dUser << std::endl;
-        std::cout << "System : " << cpu_percent << "%" << std::endl;
+        double cpu_percent = (dv.dSystem - dv.dIdle) * 100 / dv.dSystem;
+        //std::cout << "Idle : " << dv.dIdle << std::endl;
+        //std::cout << "Kernel : " << dv.dKernel << std::endl;
+        //std::cout << "User : " << dv.dUser << std::endl;
+        std::cout << "CPU: " << std::fixed << std::setprecision(1) << cpu_percent << "%" << std::endl;
     }
 }
 
