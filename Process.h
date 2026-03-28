@@ -10,7 +10,7 @@ struct ProcessInfo
 	std::wstring fileName;
 	uint64_t kernelTime, userTime, creationTime, exitTime;
 	size_t workingSet;
-	std::wstring cpuPerc;
+	double cpuPerc;
 };
 
 struct ProcessKey {
@@ -26,4 +26,4 @@ struct ProcessKey {
 
 HANDLE getSnapshot();
 std::vector<ProcessInfo> enumerateProcesses(HANDLE process);
-void printProcess();
+//void printProcess();

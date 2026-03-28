@@ -16,7 +16,7 @@ private:
 	struct RenderDetails {
 		DWORD pId;
 		std::wstring fileName;
-		std::wstring cpuPerc;
+		double cpuPerc;
 		size_t workingSet;
 	};
 
